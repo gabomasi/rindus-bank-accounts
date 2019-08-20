@@ -1,0 +1,23 @@
+######## TESTING ########
+django-debug-toolbar
+django_dynamic_fixture
+ipdb
+tblib
+########################
+
+
+######## SERVER ########
+gunicorn
+########################
+
+
+######## BBDD ##########
+psycopg2
+########################
+
+
+######## DJANGO ########
+Django==2.1.1
+django-extensions
+# django-cors-headers
+########################

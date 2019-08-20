@@ -1,0 +1,46 @@
+
+version: '2'
+
+services:
+    backend_django:
+        container_name: backend_rindus_app_code
+        build: .
+        ports:
+          - "80:8000"
+        env_file: env
+        volumes:
+            - .:/data/web
+        # command: gunicorn pizza.asgi:application -b 0.0.0.0:8000 -w 4 -k uvicorn.workers.UvicornWorker
+        command: python3 manage.py runserver 0.0.0.0:8000
+        # command: tail -f /dev/null
+        networks:
+            - backend
+        environment:
+            - VIRTUAL_HOST=backend.rindus.net
+
+    postgres:
+        container_name: backend_rindus_postgres
+        image: postgres:10.6
+        volumes_from:
+            - data
+        volumes:
+            - ~/.docker_rindus/data/postgres/backend_rindus/data:/var/lib/postgresql/data
+            - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+            - ./backups/postgresql:/backup
+        env_file:
+            - env
+        expose:
+            - "5432"
+        networks:
+            - backend
+
+    data:
+        container_name: backend_rindus_data
+        image: alpine
+        volumes:
+            - /var/lib/postgresql
+        command: "true"
+
+networks:
+    backend:
+        driver: bridge
