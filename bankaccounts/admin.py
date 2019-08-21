@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AdminPasswordChangeForm
 from django.core.exceptions import ValidationError
-from .models import User
+from django import forms
+from .models import User, BankAccount
 from .utils import get_audit_user
 
 
@@ -44,4 +45,22 @@ class UserCustomAdmin(UserAdmin):
     change_password_form = AdminPasswordChangeCustomForm
 
 
+class BankAccountAdminForm(forms.ModelForm):
+
+    class Meta:
+        model = BankAccount
+        fields = '__all__'
+
+
+class BankAccountAdmin(admin.ModelAdmin):
+    search_fields = ['iban']
+    form = BankAccountAdminForm
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user":
+            kwargs["queryset"] = User.objects.filter(created_by=get_audit_user())
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 admin.site.register(User, UserCustomAdmin)
+admin.site.register(BankAccount, BankAccountAdmin)

@@ -12,3 +12,11 @@ class User(AbstractUser):
     # def clean(self):
     #     raise ValidationError('You can not edit this user, it was not created by you')
     #     super(User, self).clean()
+
+
+class BankAccount(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='bank_accounts')
+    iban = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.iban
