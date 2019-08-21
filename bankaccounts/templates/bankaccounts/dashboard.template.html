@@ -1,0 +1,40 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+{% block result_list %}
+<div class=”results”>
+    <table>
+    <thead>
+      <tr>
+        <th>
+          <div>
+            <a href=”#”>IBAN</a>
+          </div>
+        </th>
+        <th>
+          <div>
+            <a href=”#”>First Name</a>
+          </div>
+        </th>
+        <th>
+          <div>
+            <a href=”#”>Last Name</a>
+          </div>
+        </th>
+        <th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in user.bank_accounts.all %}
+      <tr>
+        <td> {{ row.iban }} </td>
+        <td> {{ user.first_name }} </td>
+        <td> {{ user.last_name }} </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+{% endblock %}
+
+{% endblock %}

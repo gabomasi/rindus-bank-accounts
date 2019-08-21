@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'bankaccounts.User'
+LOGIN_URL = '/admin/login/'
 # Application definition
 
 INSTALLED_APPS = [

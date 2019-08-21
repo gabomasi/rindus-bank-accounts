@@ -35,6 +35,7 @@ class UserCreationCustomForm(UserCreationForm):
 
     def save(self, commit=True):
         self.instance.created_by = get_audit_user()
+        self.instance.is_staff = True
         user = super().save(commit=commit)
         return user
 
@@ -54,6 +55,7 @@ class BankAccountAdminForm(forms.ModelForm):
 
 class BankAccountAdmin(admin.ModelAdmin):
     search_fields = ['iban']
+    list_display = ['iban', 'user']
     form = BankAccountAdminForm
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
