@@ -13,7 +13,7 @@ class UserChangeCustomForm(UserChangeForm):
     password.
     """
     def clean(self):
-        if self.instance.created_by and self.instance.created_by != get_audit_user():
+        if (not self.instance.created_by) or (self.instance.created_by and self.instance.created_by != get_audit_user()):
             raise ValidationError('You can not edit this user, it was not created by you')
 
 
@@ -23,7 +23,7 @@ class AdminPasswordChangeCustomForm(AdminPasswordChangeForm):
     password.
     """
     def clean(self):
-        if self.user.created_by and self.user.created_by != get_audit_user():
+        if (not self.instance.created_by) or (self.instance.created_by and self.instance.created_by != get_audit_user()):
             raise ValidationError('You can not edit this user, it was not created by you')
 
 
@@ -66,3 +66,4 @@ class BankAccountAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserCustomAdmin)
 admin.site.register(BankAccount, BankAccountAdmin)
+admin.site.login_template = "bankaccounts/login.template.html"

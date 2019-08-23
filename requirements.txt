@@ -21,3 +21,8 @@ Django==2.2.4
 django-extensions
 # django-cors-headers
 ########################
+
+
+######### AUTH #########
+social-auth-app-django
+########################
