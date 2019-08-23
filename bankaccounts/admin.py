@@ -1,30 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AdminPasswordChangeForm
-from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import User, BankAccount
 from .utils import get_audit_user
-
-
-class UserChangeCustomForm(UserChangeForm):
-    """
-    A form that creates a user, with no privileges, from the given username and
-    password.
-    """
-    def clean(self):
-        if (not self.instance.created_by) or (self.instance.created_by and self.instance.created_by != get_audit_user()):
-            raise ValidationError('You can not edit this user, it was not created by you')
-
-
-class AdminPasswordChangeCustomForm(AdminPasswordChangeForm):
-    """
-    A form that creates a user, with no privileges, from the given username and
-    password.
-    """
-    def clean(self):
-        if (not self.instance.created_by) or (self.instance.created_by and self.instance.created_by != get_audit_user()):
-            raise ValidationError('You can not edit this user, it was not created by you')
 
 
 class UserCreationCustomForm(UserCreationForm):
@@ -41,9 +20,30 @@ class UserCreationCustomForm(UserCreationForm):
 
 
 class UserCustomAdmin(UserAdmin):
-    form = UserChangeCustomForm
     add_form = UserCreationCustomForm
-    change_password_form = AdminPasswordChangeCustomForm
+
+    def get_queryset(self, request):
+        qs = super(UserCustomAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(created_by=request.user)
+
+    def get_fieldsets(self, request, obj=None):
+        if not obj:
+            return self.add_fieldsets
+
+        if request.user.is_superuser:
+            perm_fields = ('is_active', 'is_staff', 'is_superuser',
+                           'groups', 'user_permissions')
+        else:
+            # modify these to suit the fields you want your
+            # staff user to be able to edit
+            perm_fields = ('is_active',)
+
+        return [(None, {'fields': ('username', 'password')}),
+                (('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+                (('Permissions'), {'fields': perm_fields}),
+                (('Important dates'), {'fields': ('last_login', 'date_joined')})]
 
 
 class BankAccountAdminForm(forms.ModelForm):
@@ -54,6 +54,12 @@ class BankAccountAdminForm(forms.ModelForm):
 
 
 class BankAccountAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        qs = super(BankAccountAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(user__created_by=request.user)
+
     search_fields = ['iban']
     list_display = ['iban', 'user']
     form = BankAccountAdminForm
