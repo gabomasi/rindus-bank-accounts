@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bankaccounts',
+    'bankaccounts.apps.BankaccountsConfig',
     'social_django',
 ]
 
