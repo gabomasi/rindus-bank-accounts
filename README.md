@@ -6,6 +6,7 @@ Small Django application to manage (CRUD) users and their bank account data (IBA
 - Config Google OAuth Credentials, put http://localhost/complete/google-oauth2/ on **authorized redirect URI** (https://console.developers.google.com/apis/credentials)
 - Copy env.example to env (and config your enviroment vars, do not forget google oauth key and secret)
 - Use "docker-compose up -d" to start the project containers on localhost
+- python3 manage.py runserver 0.0.0.0:80
 
 ## Requirements
 

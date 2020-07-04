@@ -17,7 +17,7 @@ psycopg2
 
 
 ######## DJANGO ########
-Django==2.2.4
+Django==3.0.2
 django-extensions
 # django-cors-headers
 ########################
