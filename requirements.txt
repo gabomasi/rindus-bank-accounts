@@ -13,6 +13,7 @@ gunicorn
 
 ######## BBDD ##########
 psycopg2
+djangorestframework-gis
 ########################
 
 

@@ -11,8 +11,8 @@ services:
         volumes:
             - .:/data/web
         # command: gunicorn pizza.asgi:application -b 0.0.0.0:8000 -w 4 -k uvicorn.workers.UvicornWorker
-        command: python3 manage.py runserver 0.0.0.0:8000
-        # command: tail -f /dev/null
+        # command: python3 manage.py runserver 0.0.0.0:8000
+        command: tail -f /dev/null
         networks:
             - backend
         environment:
@@ -20,7 +20,7 @@ services:
 
     postgres:
         container_name: backend_rindus_postgres
-        image: postgres:10.6
+        image: mdillon/postgis:10
         volumes_from:
             - data
         volumes:

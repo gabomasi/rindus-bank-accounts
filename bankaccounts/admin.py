@@ -2,8 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import User, BankAccount
+from .models import User, BankAccount, AreaEfector
 from .utils import get_audit_user
+from django.contrib.gis import admin as GeoAdmin
 
 
 class UserCreationCustomForm(UserCreationForm):
@@ -44,6 +45,17 @@ class UserCustomAdmin(UserAdmin):
                 (('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
                 (('Permissions'), {'fields': perm_fields}),
                 (('Important dates'), {'fields': ('last_login', 'date_joined')})]
+
+
+class MyGeoAdmin(GeoAdmin.OSMGeoAdmin):
+    openlayers_url = 'https://openlayers.org/api/2.13/OpenLayers.js'
+    modifiable = False
+
+
+@admin.register(AreaEfector)
+class AreaEfectorAdmin(MyGeoAdmin):
+
+    readonly_fields = ('objects', 'cobertura')
 
 
 class BankAccountAdminForm(forms.ModelForm):

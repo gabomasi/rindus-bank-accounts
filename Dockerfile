@@ -9,6 +9,7 @@ RUN apk update
 RUN apk upgrade
 RUN apk add --update python3 python3-dev postgresql-client postgresql-dev build-base gettext
 RUN apk add --update libxml2-dev libxslt-dev py3-pip libffi-dev openssl-dev
+RUN apk add --update gdal
 
 RUN pip3 install --upgrade pip
 COPY requirements.txt /data/web/

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.gis.db import models as GisModels
 
 
 class User(AbstractUser):
@@ -20,3 +21,12 @@ class BankAccount(models.Model):
 
     def __str__(self):
         return self.iban
+
+
+class AreaEfector(models.Model):
+    nombre = GisModels.CharField(max_length=35)
+    hospital = GisModels.CharField(max_length=150)
+    fuente = GisModels.CharField(max_length=100)
+    observ = GisModels.CharField(max_length=254)
+    cobertura = GisModels.CharField(max_length=50)
+    geom = GisModels.MultiPolygonField(srid=4326)
